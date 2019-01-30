@@ -135,7 +135,7 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 ### B. 粒子观测概率
 
-使用$p(x,y,z;t)​$可以得到在RX体积内观测到粒子的概率$P_{ob}(t)​$
+使用$p(x,y,z;t)$可以得到在RX体积内观测到粒子的概率$P_{ob}(t)$
 
 * $$P_{ob}(t) = \int_{-c_x/2}^{c_x/2} \int_{-c_y/2}^{c_y/2}  \int_{0}^{c_z}p(x,y,z;t)dzdydx=P_{ob,x}(t)P_{ob,y}(t)P_{ob,z}(t)​$$
 * 把y,z轴积分得到：$P_{ob,x}(t)=\frac{1}{2}[erf(\frac{\overline{x}+\frac{1}{2}c_x}{\sqrt{4Dt}})-erf(\frac{\overline{x}-\frac{1}{2}c_x}{\sqrt{4Dt}})]​$，erf是error function
@@ -206,3 +206,63 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 * 计算了不同粒子大小对脉冲反馈的影响
 * 数值仿真了log-form粒子分布和边界吸收效应如何影响脉冲反馈，发现了RX的接收能力与边界吸收能力的trade off
 * 最后，计算了SER，不同液体流速对SER的影响，外加磁场保证了更可靠的通信。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# Biosensing-by-learning Direct Targeting Strategy for Enhanced Tumor Sensitization
+
+
+
+## 第一章 介绍
+
+* MNP在MRI中通常提供更清楚的轮廓。
+* 梯度下降的DST（Direct Targeting Strategy）
+* MNP的尺寸在50-100nm，铁氧化合物[16]
+
+* 磁场驱动的MNP需要先验知识：目的地点在哪里
+
+## 第二章 外部测量函数
+
+* 用纳米机在环境内测量形成外部映射函数，得到梯度信息。
+
+### A. 环境敏感的纳米系统(Environment-responsive)
+
+* 毛细血管在人体组织中基本都是均匀分布的，为了运输氧气和养料[33]-[35]
+* 肿瘤中的毛细血管流速总是显著地慢于正常组织中的流速
+* 通过纳米机的运动速度和轨迹上的曲折程度得到外部测量函数
+
+### B. 环境引导的纳米系统(Environment-primed)
+
+* gold nanorod注入人体后通过长时间血液循环会累积在肿瘤附近，同时会使肿瘤附近升温，所以肿瘤附近血液流速升高，形成温度梯度
+
+## 第三章 迭代DTS
+
+### A. 基于入侵渗流的多层血管网模型
+
+* 肿瘤的血管更加地"chaotic"，可以用分形几何进行描述（分形维度不一样）
+* 肿瘤表面的毛细血管更多，中心区域更少。
+
+### B. 问题描述
+
+* $f​$表示外部描述函数，定义域是$  \mathscr {D}​$, $G​$是猜测区域
+* $$f(\overrightarrow{x}; G) = f_A(\overrightarrow{x};G)+f_C(\overrightarrow{x};G)​$$
+* $$f(\overrightarrow{x}; G) = f_T(\overrightarrow{x})+f_D(\overrightarrow{x};G) +f_C(\overrightarrow{x};G), \overrightarrow{x}\in  \mathscr {D}$$
+
+
+

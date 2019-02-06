@@ -180,6 +180,8 @@
 
 
 
+---
+
 
 
 ## Part 2. 基本操作
@@ -238,4 +240,49 @@ public static int sum(int ... data) {
 	return sum; 
 }
 ```
+
+### 引用传递实际应用
+
+引用传递是Java开发中最重要的技术组成。
+
+* 类的关联：“人”有“车”，“车”有“人”（车主）。类中相互引用。
+
+  ```java
+  class Person {
+  	private Car car;
+  	public void setCar(Car car){
+  		this.car = car;
+  	}
+  }
+  class Car {
+  	private Person person
+  	public void setPerson(Person per){
+  		this.Person = per;
+  	}
+  }
+  ```
+
+* 自身关联
+
+  ```java
+  class Person{ 
+  	private Person[] children;
+  	public void setChildren(Person[] children){
+  		this.children = children;
+  	}
+      public Person[] getChildren(){
+      	return this.children;
+      }
+  }
+  ```
+
+这些都是通过引用数据类型的关联来完成的
+
+
+
+---
+
+
+
+## Part 3. String类
 

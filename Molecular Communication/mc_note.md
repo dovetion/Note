@@ -42,13 +42,13 @@
 
 ### A. 建模
 
-![image-20190120210309842](./1.png)
+![image-20190120210309842](./imgs/1.png)
 
-* 系统模型是三维的，高度$$h​$$，宽度$w​$，粒子只在这个管道内部扩散$$x\in ( -\infin,+ \infin), z\in[0,h], y\in[-\frac{w}{2}, \frac{w}{2}] ​$$
+* 系统模型是三维的，高度$$h$$，宽度$w$，粒子只在这个管道内部扩散$$x\in ( -\infin,+ \infin), z\in[0,h], y\in[-\frac{w}{2}, \frac{w}{2}] $$
 
-* 粒子可能被吸附在内壁，模型中使用常系数$k_a​$：粒子在y轴和z轴，随时间被吸附的速率（相对于边界浓度）。（不吸收边界$k_a=0​$，完全吸收边界$k_a \rightarrow \infin​$）
+* 粒子可能被吸附在内壁，模型中使用常系数$k_a$：粒子在y轴和z轴，随时间被吸附的速率（相对于边界浓度）。（不吸收边界$k_a=0$，完全吸收边界$k_a \rightarrow \infin$）
 
-* 假设发射器固定在$(x,y,z) = (-d, 0, z_0)$，接收器固定在$(x,y, z) = (0,0,0)​$
+* 假设发射器固定在$(x,y,z) = (-d, 0, z_0)$，接收器固定在$(x,y, z) = (0,0,0)$
 
 * 假设液体速度平均，载动MNPs向正向$x$轴方向以速度$v_f$移动，但可能直接超过RX点。
 
@@ -62,42 +62,42 @@
 
   
 
-![image](./2.png)
+![image](./imgs/2.png)
 
 ### B. 磁场动力学计算
 
-* $N_s​$个磁性粒子(SPION)被包裹在非磁性不反应材料中，被称作一个MNP。$N_s=C_s*V_h​$
-* 合成过程中MNP大小会产生差异，因此用log-normal来表示，均值$\mu_h​$，标准差$\sigma_h​$
+* $N_s$个磁性粒子(SPION)被包裹在非磁性不反应材料中，被称作一个MNP。$N_s=C_s*V_h$
+* 合成过程中MNP大小会产生差异，因此用log-normal来表示，均值$\mu_h$，标准差$\sigma_h$
 
-* 外部磁场$B(z)​$仅依赖于$z​$方向，在$x​$和$y​$上平均分布，$B'(z)​$为磁场的梯度场。
+* 外部磁场$B(z)$仅依赖于$z$方向，在$x$和$y$上平均分布，$B'(z)$为磁场的梯度场。
 * 每个MNP被磁化强度（magenitization）影响：$M(B)=M_sL(\frac{V_sM_sB}{k_BT_f})$
-* $L(x) ​$ **Langevin function**：计算理想顺磁体的磁化强度。$V_s​$为MNP体积，$M_s​$为饱和磁化强度，即$M(B\rightarrow \infin) = M_s，M(B = 0) = 0​$
+* $L(x) $ **Langevin function**：计算理想顺磁体的磁化强度。$V_s$为MNP体积，$M_s$为饱和磁化强度，即$M(B\rightarrow \infin) = M_s，M(B = 0) = 0$
 * 在大磁体中，$M$不仅依赖于当前$B$，以依赖于之前的$B$(磁滞)，SPION没有这个性质**(超顺磁性)**
 
 * 给定$V_s$和平均磁化强度，包含$N_s$个SPION的MNP 在磁场强度$B$的作用下延$z$轴的力为$$F_m(z)=-N_sV_s\frac{\delta}{\delta z}(M(B(z))*B(z))$$，MNP可能会相互影响，因此$F_m$可以被表示为磁力上界
-* MNP的运动速度$v_m​$由$F_m​$和布朗运动影响，扩散系数为$D​$
-* MNP受到$F_m​$的力，同时浸泡在粘滞度为 $ \eta ​$ 的液体中，$v_m = \frac{F_m}{\zeta}​$，$\zeta = 6\pi\eta R_h​$ (Stokes' law)，因此可以得到 $$v_m(z) = -R_h^2C_s\frac{2V_s}{9\eta}\frac{\delta}{\delta z}(M(B(z))*B(z))​$$（忽略加速过程）
+* MNP的运动速度$v_m$由$F_m$和布朗运动影响，扩散系数为$D$
+* MNP受到$F_m$的力，同时浸泡在粘滞度为 $ \eta $ 的液体中，$v_m = \frac{F_m}{\zeta}$，$\zeta = 6\pi\eta R_h$ (Stokes' law)，因此可以得到 $$v_m(z) = -R_h^2C_s\frac{2V_s}{9\eta}\frac{\delta}{\delta z}(M(B(z))*B(z))$$（忽略加速过程）
 * 在流体运动和磁力叠加下，粒子总速度为$$(v_f,0,v_m)$$
-* $$v_m=\begin{cases} -R_h^2C_s\frac{4V_s}{9\eta}\propto B(z)B'(z) \quad B\ small \\ -R_h^2C_s\frac{2V_s}{9\eta}M_sB'(z) \quad B\ large\end{cases}​$$  磁场提供的速度很依赖于$B'(z)​$
-* 由热力学，$\zeta​$ 与$D​$相关联，$k_BT_f=D\zeta​$，所以给定粘滞度$\zeta​$和液体温度$T_f​$，$$D=\frac{k_BT_f}{6\pi  \eta R_h}​$$
+* $$v_m=\begin{cases} -R_h^2C_s\frac{4V_s}{9\eta}\propto B(z)B'(z) \quad B\ small \\ -R_h^2C_s\frac{2V_s}{9\eta}M_sB'(z) \quad B\ large\end{cases}$$  磁场提供的速度很依赖于$B'(z)$
+* 由热力学，$\zeta$ 与$D$相关联，$k_BT_f=D\zeta$，所以给定粘滞度$\zeta$和液体温度$T_f$，$$D=\frac{k_BT_f}{6\pi  \eta R_h}$$
 
 ### C. 磁场强度计算
 
-考虑一个对称型的圆柱形磁铁，长度$L_{mag}$，半径$R_{mag}​$，则
+考虑一个对称型的圆柱形磁铁，长度$L_{mag}$，半径$R_{mag}$，则
 
-$$B(z) = \frac{B_0}{2}(\frac{z+d_M+L_{mag}}{\sqrt{(z+d_M+L_{mag})^2+R^2_{mag}}}-\frac{z+d_m}{\sqrt{(z+d_m)^2+R^2_{mag}}})​$$
+$$B(z) = \frac{B_0}{2}(\frac{z+d_M+L_{mag}}{\sqrt{(z+d_M+L_{mag})^2+R^2_{mag}}}-\frac{z+d_m}{\sqrt{(z+d_m)^2+R^2_{mag}}})$$
 
-* $B_0​$是系统参数，反应磁铁的性质，那么$$B'(z)=\frac{B_0}{2}(\frac{R^2_{mag}}{((z+d_M+L_{mag})^2+R^2_{mag})^2}-\frac{R^2_{mag}}{ ((z+d_m)^2+R^2_{mag})^{3/2}})​$$
+* $B_0$是系统参数，反应磁铁的性质，那么$$B'(z)=\frac{B_0}{2}(\frac{R^2_{mag}}{((z+d_M+L_{mag})^2+R^2_{mag})^2}-\frac{R^2_{mag}}{ ((z+d_m)^2+R^2_{mag})^{3/2}})$$
 
-* $R_{mag} >> d,w​$时上述方程已经足够表述信道里的磁场性质。
+* $R_{mag} >> d,w$时上述方程已经足够表述信道里的磁场性质。
 * 因为$h$很小，对于$z\in[0,h]$可以假设$B(z)$和$B'(z)$是常数，因此$v_m(z)$设也是常数
 
 ### D. 调制和检测
 
 二进制符号$b[i]$使用OOK调制。TX在时隙$T$瞬间释放$N_{TX}$个和0个MNP，分别表示$b[i]=1$，$b[i]=0$
 
-* 假设RX与TX同步，i.e.知道$T​$以及时隙的开始和结束时刻
-* 通过$iT+t_0$的粒子数量采样，每个时隙采样到$n_{RX}[i]$个粒子与阈值$\xi​$
+* 假设RX与TX同步，i.e.知道$T$以及时隙的开始和结束时刻
+* 通过$iT+t_0$的粒子数量采样，每个时隙采样到$n_{RX}[i]$个粒子与阈值$\xi$
 
 $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{cases}$$
 
@@ -111,15 +111,15 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 * 在x轴上符合无边界环境，且漂移常数$v_f$，所以x轴上的分布可由[36]得到
 
-  $$p_x(x;t) = \frac{1}{\sqrt{4D\pi t}}exp(\frac{-(x+d-v_ft)^2}{4Dt})​$$
+  $$p_x(x;t) = \frac{1}{\sqrt{4D\pi t}}exp(\frac{-(x+d-v_ft)^2}{4Dt})$$
 
-* x轴上均值$$\overline{x}(t)=-d+v_ft$$，到达RX中心的时间$$t_1=d/v_f​$$
+* x轴上均值$$\overline{x}(t)=-d+v_ft$$，到达RX中心的时间$$t_1=d/v_f$$
 
 * z轴上分布比较难以计算，因为是bounded环境，如果得到了z轴分布，那么y轴分布也很容易得到，去掉磁场的部分就行了。
 
 * 计算$p_z(z;t)$,首先需要计算一个带边界和drift的扩散方程的PDE
 
-* 带drift和边界的扩散方程：$$\frac{\delta}{\delta t}p_z = -\frac{\delta}{\delta z}J_z​$$， $$J_z​$$是概率通量，由2个部分组成，一个是扩散部分，一个是受到磁力影响的运动
+* 带drift和边界的扩散方程：$$\frac{\delta}{\delta t}p_z = -\frac{\delta}{\delta z}J_z$$， $$J_z$$是概率通量，由2个部分组成，一个是扩散部分，一个是受到磁力影响的运动
 
 * $$J_z(z;t)=-D\frac{\delta}{\delta z}p_z(z;t)-v_mp_z(z;t)$$，受边界吸收可被表示为$$J_z(z;t)=k_ap_z(z;t)$$
 
@@ -127,18 +127,18 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 **接下来已经看不懂了，反正乱算了一通可以得到**
 
-* $$p_z(z;t)=exp(-u(z-z_0)-Du^2t)*[\sum_{n=0}^Na_nexp(-Ds_n^2t)Z_n(z)]​$$
+* $$p_z(z;t)=exp(-u(z-z_0)-Du^2t)*[\sum_{n=0}^Na_nexp(-Ds_n^2t)Z_n(z)]$$
 
-* $$p_y(y;t)=\sum_{n=0}^Nb_nexp(-D{o_n^2})Y_n(y)​$$
+* $$p_y(y;t)=\sum_{n=0}^Nb_nexp(-D{o_n^2})Y_n(y)$$
 
-* $$Z_n(z)​$$（15），$Y_n(y)​$（25）
+* $$Z_n(z)$$（15），$Y_n(y)$（25）
 
 ### B. 粒子观测概率
 
 使用$p(x,y,z;t)$可以得到在RX体积内观测到粒子的概率$P_{ob}(t)$
 
-* $$P_{ob}(t) = \int_{-c_x/2}^{c_x/2} \int_{-c_y/2}^{c_y/2}  \int_{0}^{c_z}p(x,y,z;t)dzdydx=P_{ob,x}(t)P_{ob,y}(t)P_{ob,z}(t)​$$
-* 把y,z轴积分得到：$P_{ob,x}(t)=\frac{1}{2}[erf(\frac{\overline{x}+\frac{1}{2}c_x}{\sqrt{4Dt}})-erf(\frac{\overline{x}-\frac{1}{2}c_x}{\sqrt{4Dt}})]​$，erf是error function
+* $$P_{ob}(t) = \int_{-c_x/2}^{c_x/2} \int_{-c_y/2}^{c_y/2}  \int_{0}^{c_z}p(x,y,z;t)dzdydx=P_{ob,x}(t)P_{ob,y}(t)P_{ob,z}(t)$$
+* 把y,z轴积分得到：$P_{ob,x}(t)=\frac{1}{2}[erf(\frac{\overline{x}+\frac{1}{2}c_x}{\sqrt{4Dt}})-erf(\frac{\overline{x}-\frac{1}{2}c_x}{\sqrt{4Dt}})]$，erf是error function
 * **乱算一通**得到$P_{ob,y}(t)$和$P_{ob,z}(t)$
 * 考虑了几种特殊情况，**渐进行为(?)**，边界完全反弹，边界完全吸收下的观测概率
 
@@ -152,7 +152,7 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 ### B. 脉冲反馈
 
-观测概率期望$E\{P_{ob}(t)\} = \int^\infin_0P_{ob}(t;r)*f_{R_h}(r)dr​$，$f_{R_h}(r)​$是log-form的概率密度函数
+观测概率期望$E\{P_{ob}(t)\} = \int^\infin_0P_{ob}(t;r)*f_{R_h}(r)dr$，$f_{R_h}(r)$是log-form的概率密度函数
 
 所以有$\overline{N}_{ob}(t)=N_{TX}*E\{P_{ob}(t)\}$，作为信道的脉冲反馈(**impulse response**)，这个积分又算不出来，使用蒙特卡洛方法：$\overline{N}_{ob}(t)=\sum_{i=1}^{N_{TX}}P_{ob,i}(t)$
 
@@ -160,11 +160,11 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 由前面可知$$\overline{n}_{RX}[i]=\sum_{j=0}^ib[j]\overline{N}_{ob}((i-j)T+t_0)$$
 
-由于扩散效应和码间干扰，可计算发送$K​$个符号的平均SER：$$P_e=\frac{1}{2^K}\sum_{b\in B(K)}[\frac{1}{K}\sum_{i=0}^{K-1}Pr(\hat{b}[i] \ne b[i];b[j\le i])]​$$
+由于扩散效应和码间干扰，可计算发送$K$个符号的平均SER：$$P_e=\frac{1}{2^K}\sum_{b\in B(K)}[\frac{1}{K}\sum_{i=0}^{K-1}Pr(\hat{b}[i] \ne b[i];b[j\le i])]$$
 
 * $B(K)$是$2^K$个可能的二进制序列集合
 
-* $Pr(\hat{b}[i]\ne b[i];b[j\le i])​$表示序列中$b[i]​$传输错误的概率
+* $Pr(\hat{b}[i]\ne b[i];b[j\le i])$表示序列中$b[i]$传输错误的概率
 
 * $Pr(\hat{b}[i]\ne b[i];b[j\le i]) = \begin{cases}p_\xi(b[j\le i]),\quad b[i]=1 \\ 1-p_\xi(b[j\le i]),\quad b[i]=0\end{cases}$
 
@@ -181,21 +181,21 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 ## 第五章 数值仿真结果
 
 * 不考虑计算复杂度
-* ![image](./3.png)
+* ![image](./imgs/3.png)
 
 
 
 * 吸收常数$k_a$和信道边界吸收粒子概率$P_ad$存在一个数值关系
 * 对一个单独SPION施加磁场得到的速度
-* ![image](./4.png)
+* ![image](./imgs/4.png)
 
 
 
-* ![image](./5.png)
+* ![image](./imgs/5.png)
 
-* ![image](./6.png)
+* ![image](./imgs/6.png)
 
-* ![image](./7.png)
+* ![image](./imgs/7.png)
 
 ## 第六章 结论
 
@@ -260,9 +260,139 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 ### B. 问题描述
 
-* $f​$表示外部描述函数，定义域是$  \mathscr {D}​$, $G​$是猜测区域
-* $$f(\overrightarrow{x}; G) = f_A(\overrightarrow{x};G)+f_C(\overrightarrow{x};G)​$$
+* $f$表示外部描述函数，定义域是$  \mathscr {D}$, $G$是猜测区域
+* $$f(\overrightarrow{x}; G) = f_A(\overrightarrow{x};G)+f_C(\overrightarrow{x};G)$$
 * $$f(\overrightarrow{x}; G) = f_T(\overrightarrow{x})+f_D(\overrightarrow{x};G) +f_C(\overrightarrow{x};G), \overrightarrow{x}\in  \mathscr {D}$$
 
 
+
+
+
+
+
+# Chemotactic-based Target Detection Scheme in a Multiple-hop Relay Nano-network
+
+## 第一章 介绍
+
+* 沙门氏菌对于肿瘤的排放物具有高度趋化性。
+* 基于single-hop模型设计了multi-hop系统模型，需要用到多种趋化物质。
+
+## 第二章 系统模型
+
+* one-hop模型
+  * 对于中继节点：一旦发现趋化物质A，停止运动，释放物质B1
+  * 对于纳米机：如果探测到物质A，朝A的高浓度方向运动；若没探测到A，但探测到B1，朝B1浓度高的方向运动；都没探测到，随机运动。
+* two-hop模型：需要中继节点能释放至少两种趋化物质，纳米机能够区分三种趋化物质。
+
+## 第三章 数学模型
+
+假设：
+
+1. 2D平面有界环境 $L*L$
+2. 目标区域$E_T(\in E)$
+3. 如果纳米机运动到边界，反射进入环境
+4. 不考虑纳米机碰撞
+
+
+
+
+
+# Performance Analysis for Cooperative Relaying in Diffusion-Based Molecular Communication
+
+## 第一章 介绍
+
+* 传统的中继策略包括
+  * 解码转发(decode-and-forward, DF)：解码收到的信息，重新编码再发送。可以减少噪声水平，但信道质量不好时误码率堪忧。
+  * 放大转发(amplify-and-forward, AF)：直接放大转发。也同时放大了信道噪声，在信道质量不好的信道中能取得更好效果。
+  * 降噪转发(genoise-and-forward,  DNF)
+* 提出了一种协同中继策略，结合了AF和DF的优势。被称为**解码放大中继(decide-amplify-foward, ODAF)**
+* 在ODAF中，使用均值方差(MSE)来对中继和接收节点做决策。通过误码率分析去衡量中继策略的性能。
+
+
+
+## 第二章 系统模型
+
+* 三个纳米机，$S, D, R$。分布在三维空间中。
+* 采用ASK进行信号调制。
+* 节点$S$通过在一个时隙里释放$N_1, N_0$来表达二进制中的$1,0$
+* 考虑了码间干扰ISI，且长度为$I$
+* 接收机处浓度 $y(\overrightarrow{r}, t) = \sum_{i=0}^{I} C_{a^{k-i}}(\overrightarrow{r}, t+iT) + n(t)$
+* $a^{k}$：二进制message汇总第$k$个interval
+* $n(t)$：噪声，符合分布$n(t) \sim \mathcal{N}(0, \sum_{i=0}^{I}C_{a^{k-i}}, i / V_R)$
+* 系统在一个时隙内采样，或观测浓度$M$ 次，因此$y = \sum_{i=0}^{I} \sum_{m=1}^{M}C_{a^{k-i}}(\overrightarrow r, t_m+iT)+n(t)$
+* $y = \sum_{i=0}^{I} C_{a^{k-i},i}+n(t)$
+
+
+
+## 第三章 中继信道性能分析
+
+* 这一章里对AF, DF, ODAF进行BER分析，并考虑使用同种分子(same type molecules, STM)和不同种类分子(different type molecules, DTM)进行调制。
+
+
+
+
+
+# A Novel Experimental Platform for In-Vessel Multi-Chemical Molecular Communications
+
+## 第一章 介绍
+
+* 搭建了一个实验平台，通过注射酸和碱，把信息编码在pH值中，成本低。
+* 解码困难，设计了基于SVM和RNN的解码器，因此需要数据进行“训练”，去熟悉信道模型。其中RNN解码器的表现十分接近于最大似然解码器(Maximum Likelihood, ML)。RNN的效果好于10倍的Slope解码，好于SVM解码器两倍。使信道速率从0.3bps扩大到4bps
+
+![image](./imgs/8.png)
+
+## 第二章 多化合物实验平台
+
+* 除了使用酸碱，还可以使用蛋白质，葡萄糖和酶（有对应传感器），
+* 发射器端使用了旋转泵（ peristaltic pump），可以从多个容器中抽出液体
+* 传输信道是硅管，直径2.5毫米，一直使用清水注射，大概1.3ml/s，pH在7到8.5之间
+* 接收端使用pH探针，pH表， Arduino Uno和电脑，使用pH的好处是，电压和pH是线性关系。
+
+
+
+## 第三章 基于实验平台的通信系统
+
+* 分为两个部分，第一个是调制和协议，第二个是检测和解调。
+
+* 调制和协议
+
+  * 采用time-slotted，每一个时隙30ms，在这段时间里注射酸或碱代表0和1。但是存在一个guard band，分别是220ms, 304ms,  350ms, 470ms代表4, 3, 2.6, 2bps。
+  * 为了同步发送端和接收端，每一段消息序列开头使用100ms的酸注射和900ms静止时间
+
+* 基于速率变化的符号检测
+
+  * 将pH值的变化率作为baseline和其他方法进行对比
+  * 把每一个interval平均分成9个sub-interval，用均值作为这个sub-interval的pH,可以检测8次变化率
+  * 从2bps到4bps的结果如下，随速率上升，ISI更明显，最好的阈值时0，最好的决策bin是第8次pH变化
+
+  ![image](./imgs/9.png)
+
+  
+
+* 基于机器学习的符号检测（SVM和RNN）
+  * $x$为发送比特，$\mathbf{s}$为d维接收到的信号向量，$\mathbf{y}$为解调$\mathbf{s}$后的长度为$m$信号，$\varphi: \mathcal{R}^d \mapsto \mathcal{R}^m$是解调函数
+  * 基于SVM的解调器
+    * 考虑线性回归 $\widehat{x} = \mathbf{w}^T \mathbf{y} + b$ ，$\mathbf{w}$是系数权重，$b$为基，通过一组训练数据 $\{ (x_1, \mathbf{y_1}), \cdots , (x_n, \mathbf{y_n})\}$ ，找到一组$\mathbf{w}$和$b$使得它在训练集上平方误差最小
+    * 由于发送信号和接收信号是非线性关系，因此使用SVM把特征空间映射到更高维，映射由函数$\phi(\mathbf{y})$完成
+    * 两个采样的核函数定义：$k(\mathbf{y_i}, \mathbf{y_j})= \phi(\mathbf{y_i}) ^T\phi(\mathbf{y_j})$
+    * 定义$\widehat{x}'_i = 2x_i-1$
+    * 通过上述定义，可以把线性回归转换成$\widehat{x}' = sgn(\mathbf{w}^T\phi(\mathbf{y})+b) = sgn(b + \sum_{i=1}^n\alpha_ix_i'k(\mathbf{y,y_i}))$, $i$是训练集训练数据的下标，$\alpha_i$是对应数据的权重，然后这个问题转化成了凸优化。使用**高斯核函数**
+  * 基于RNN的解调器
+    * 看不懂
+
+
+
+## 第四章 实验结果与结论
+
+* SVM和RNN的效果显著好于baseline，RNN好于SVM
+
+* 做了194次实验，每次随机传输120个比特，20%的数据用于训练，80%用于检测。给出了基于SVM的最好$\sigma$和RNN最好的LSTM参数。
+
+  ![image](./imgs/10.png)
+
+
+
+
+
+# Design and wet-laboratory implementation of reliable end-to-end molecular communication
 

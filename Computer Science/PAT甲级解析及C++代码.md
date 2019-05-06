@@ -1802,7 +1802,7 @@ int main() {
 
 
 
-### 1033 1033 To Fill or Not to Fill
+### [TODO] 1033 To Fill or Not to Fill
 
 ### 1034 Head of a Gang
 
@@ -2025,6 +2025,1071 @@ int main() {
             break;
     }
     cout<<sum<<endl;
+}
+```
+
+
+
+### 1038 Recover the Smallest Number **
+
+题意：给n个不超过8位的数字，把它们连在一起，成为最小的数字，是多少？
+
+思路：默认排序是不行的，要自己写排序函数。也要注意去掉前导0的方法。
+
+```c++
+int n;
+string s, ans;
+vector<string> v;
+bool cmp(string a, string b){
+    string c = a+b;
+    string d = b+a;
+    return c<=d? true:false;
+}
+int main() {
+    cin>>n;
+    if(n == 0) return 0;
+    for(int i=0;i<n;i++){
+        cin>>s;
+        v.push_back(s);
+    }
+    sort(v.begin(), v.end(), cmp);
+    bool f = true;
+    for(auto x: v) ans.append(x);
+    for(auto ch: ans){
+        if(f && ch == '0') continue;
+        else{
+            f = false;
+            cout<<ch;
+        }
+    }
+    if(f) cout<<"0";
+    cout<<endl;
+}
+```
+
+
+
+
+
+## 第十一套
+
+### 1039 Course List for Student
+
+题意：无聊的stl题目
+
+思路：注意使用`cin`超时，需要关闭同步
+
+```c++
+int n, k, id, num;
+string name;
+map<string, vector<int>> name2course;
+int main() {
+    ios::sync_with_stdio(false);cin.tie(0);
+    cin>>n>>k;
+    for(int i=0;i<k;i++){
+        cin>>id>>num;
+        for(int j=0;j<num;j++){
+            cin>>name;
+            name2course[name].push_back(id);
+        }
+    }
+    while(cin>>name){
+        cout<<name<<" "<<name2course[name].size();
+        sort(name2course[name].begin(), name2course[name].end());
+        for(auto x: name2course[name]) cout<<" "<<x;
+        cout<<endl;
+    }
+}
+```
+
+
+
+### 1040 Longest Symmetric String 
+
+题目：求最长回文串长度，经典题目
+
+思路：给了400ms，暴力可以123ms秒掉。代码如下，注意带空格的字符串使用`getline(cin, s)`
+
+```c++
+string s;
+int ans=1;
+int go(string p){
+    for(int i=0,j=p.length()-1;i<j;i++,j--)
+        if(p[i] == p[j]) continue;
+        else return -1;
+    return p.length();
+}
+int main() {
+    ios::sync_with_stdio(false);cin.tie(0);
+    getline(cin,s);
+    for(int i=0;i<s.length();i++)
+        for(int j=i+1;j<s.length();j++)
+            ans = max(ans, go(s.substr(i,j-i+1)));
+    cout<<ans<<endl;
+}
+```
+
+作为经典题目，只会暴力是不够的，暴力复杂度$O(n^3)$，现在使用动态规划降到$O(n^2)$
+
+即：已知$S[i..j]$是回文串，那么如果$S[i-1]==s[j+1] \ and\  S[i…j]$更新
+
+或者：以$S[i]$为中心向两边扩散，耗时5ms
+
+```c++
+string s;
+int ans=1;
+int main() {
+    ios::sync_with_stdio(false);cin.tie(0);
+    getline(cin,s);
+    for(int i=0;i<s.length();i++){
+        int odd = 1, even1 = 0, even2=0;
+        for(int l=i-1, r=i+1;l>=0 && r<s.length();l--,r++) 
+            if(s[l] == s[r]) odd += 2;
+            else break;
+        for(int l=i-1, r=i;  l>=0 && r<s.length();l--,r++) 
+            if(s[l] == s[r]) even1 += 2;
+            else break;
+        for(int l=i, r=i+1 ; l>=0 && r<s.length();l--,r++) 
+            if(s[l] == s[r]) even2 += 2;
+            else break;
+        ans = max(ans,  max(odd, max(even1, even2)));
+    }
+    cout<<ans<<endl;
+}
+```
+
+
+
+### 1041 Be Unique
+
+题意：给出n个数字，输出第一个只出现过一次的数字，若没有输出`None`
+
+思路：需要注意，判断出现过一次要用`mp[a[i]] == 1`而不是`mp.count(a[i]) == 1`，后者一直成立。
+
+```c++
+int n, bet, a[MAXN];
+map<int, int> mp;
+int main() {
+    scanf("%d", &n);
+    for(int i=0;i<n;i++){
+        scanf("%d",a+i);
+        mp[a[i]]++;
+    }
+    for(int i=0;i<n;i++){
+        if(mp[a[i]] == 1){
+            cout<<a[i]<<endl;
+            return 0;
+        }
+    }
+    cout<<"None"<<endl;
+    return 0;
+}
+```
+
+
+
+
+
+## 第十二套
+
+### 1042 Shuffling Machine
+
+题意：给定置换序列，扑克牌初始状态，洗k次后的结果
+
+思路：多开一个数组容易很多，洗了之后要覆盖，注意`to_string`方法。
+
+```c++
+int k, pos[55];
+vector<string> card(55), ans;
+vector<string> go(vector<string> card){
+    vector<string> ret(55);
+    for(int i=1;i<=MAXN;i++)
+        ret[pos[i]] = card[i];
+    return ret;
+}
+int main() {
+    cin>>k;
+    for(int i=1;i<=MAXN;i++) cin>>pos[i];
+    for(int i=1;i<=13;i++){
+        string a="S",b="H",c="C",d="D";
+        a.append(to_string(i));
+        b.append(to_string(i));
+        c.append(to_string(i));
+        d.append(to_string(i));
+        card[i] = a;
+        card[i+13*1] = b;
+        card[i+13*2] = c;
+        card[i+13*3] = d;
+    }
+    card[53] = "J1"; card[54] = "J2";
+    while(k--) {
+        ans = go(card);
+        card = ans;
+    }
+    for(int i=1;i<=MAXN;i++)
+        if(i==1) cout<<ans[i];
+        else cout<<" "<<ans[i];
+    cout<<endl;
+    return 0;
+}
+```
+
+
+
+### 1043 Is It a Binary Search Tree
+
+题意：给定一个序列，判断它是不是一个bst的前序遍历，或翻转bst的前序遍历。如果是，输出后序遍历。
+
+```c++
+vector<int> a;
+int n, x;
+bool f1 = true, f2= true, f = true;
+struct node{
+    int data;
+    node *l, *r;
+    node(int a){this->data=a;this->l=NULL;this->r=NULL;}
+};
+node* build1(vector<int> a){
+    if(a.empty()) return NULL;
+    node* ret = new node(a[0]);
+    vector<int> l, r;
+    int idx = 1;
+    for(idx=1; idx<a.size() && a[idx]<a[0]; idx++)
+        l.push_back(a[idx]);
+    for(;idx<a.size();idx++){
+        if(a[idx] < a[0]) f1  =false;
+        r.push_back(a[idx]);
+    }
+    ret->l = build1(l);
+    ret->r = build1(r);
+    return ret;
+}
+node* build2(vector<int> a){
+    if(a.empty()) return NULL;
+    node* ret = new node(a[0]);
+    vector<int> l, r;
+    int idx = 1;
+    for(idx=1; idx<a.size() && a[idx]>=a[0]; idx++)
+        l.push_back(a[idx]);
+    for(;idx<a.size();idx++){
+        if(a[idx] >= a[0]) f2  =false;
+        r.push_back(a[idx]);
+    }
+    ret->l = build2(l);
+    ret->r = build2(r);
+    return ret;
+}
+void post(node* rt){
+    if(rt == NULL) return ;
+    post(rt->l);
+    post(rt->r);
+    if(f){
+        f = false;
+        cout<<"YES"<<endl;
+        cout<<(rt->data);
+    }
+    else
+        cout<<" "<<(rt->data);
+}
+int main() {
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        a.push_back(x);
+    }
+    node* rt = build1(a);
+    if(f1)
+        post(rt);
+    else {
+        rt = build2(a);
+        if(f2)
+            post(rt);
+        else
+            cout<<"NO"<<endl;
+    }
+}
+```
+
+
+
+
+
+### 1044 Shopping in Mars*
+
+题意：给定一个序列和一个数字m，求序列中存在多少对$i,j$，使得$sum(a_i,…,a_j) == m$，若不存在找出使得$min( sum(a_i,…a_j)-m)$的$i,j$对。
+
+思路：暴力过不了，只能双指针滑窗，需要非常注意细节。
+
+```c++
+ll n, m, a[MAXN]={0}, sum=0, mcost=INF;
+vector<pii> ans;
+int main(){
+    scanf("%lld%lld", &n, &m);
+    for(int i=1;i<=n;i++) scanf("%lld", a+i);
+    sum = a[1];
+    int begin=1, end=1;
+    while(begin<=end && end<=n){
+        if(sum == m) {
+            ans.push_back({begin, end});
+            if(begin==end && end < n) sum += a[++end];
+            else sum -=a [begin++];
+        }
+        else if(sum > m){
+            mcost = min(mcost, sum-m);
+            if(begin < end) sum -= a[begin++];
+            else if(end < n) sum += a[++end];
+        }
+        else if(sum < m ){
+            if(end < n) sum += a[++end];
+            else sum -= a[begin++];
+        }
+        if(begin==n && end == n) break;
+    }
+
+    if(!ans.empty())
+        for(auto x: ans) printf("%d-%d\n",x.first, x.second);
+    else{
+        begin = 1, end = 1;
+        sum = a[1];
+        while(begin<=end && end<=n){
+            if(sum > m){
+                if(sum - m == mcost) ans.push_back({begin, end});
+                if(begin < end) sum -= a[begin++];
+                else if(end < n) sum += a[++end];
+            }
+            else if(sum < m ){
+                if(end < n) sum += a[++end];
+                else sum -= a[begin++];
+            }
+            if(begin==n && end == n) break;
+        }
+        for(auto x: ans) printf("%d-%d\n",x.first, x.second);
+    }
+}
+```
+
+
+
+### 1045 Favorite Color Stripe*
+
+题意：给定一个序列a和一个序列b，要从b序列中找出一个**子序列**满足：1.每个元素都是a中的元素 2.顺序要与a中保持一致 3.尽可能长
+
+思路：最长上升子序列的变种。输入的时候先去掉a中不存在的元素，用数组维护某元素结束的最大长度。更新及是，找出**a中，包括自己，顺序之前**的最大答案加1。
+
+```c++
+int n, m, len, x, ans = 0, cnt[MAXN] = {0};
+vector<int> fav, a;
+unordered_map<int, int> mp;
+int main(){
+    cin>>n>>m;
+    for(int i=0;i<m;i++){
+        cin>>x;
+        fav.push_back(x);
+        mp[x]++;
+    }
+    cin>>len;
+    for(int i=0;i<len;i++){
+        cin>>x;
+        if(mp.count(x) == 0) continue;
+        a.push_back(x);
+    }
+    for(int i=0;i<a.size();i++){
+        int maxcnt = 0;
+        for(int j=0;j<fav.size();j++){
+            maxcnt = max(maxcnt, cnt[fav[j]]);
+            if(fav[j] == a[i]) break;
+        }
+        cnt[a[i]] = maxcnt + 1;
+        ans = max(ans, cnt[a[i]]);
+    }
+    cout<<ans<<endl;
+}
+```
+
+
+
+## 第十三套
+
+### 1046 Shortest Distance
+
+题意：给定一个包含n个点的圈，以及n条边的距离，进行m次询问，每次询问$i,j$的最短距离
+
+思路：被秒题
+
+```c++
+int n, a[MAXN], tot=0, sum[MAXN] = {0}, x, y;
+int main(){
+    scanf("%d", &n);
+    for(int i=1;i<=n;i++){
+        scanf("%d", a+i);
+        sum[i] = sum[i-1]+a[i];
+        tot += a[i];
+    }
+    scanf("%d", &n);
+    while(n--){
+        scanf("%d%d",&x,&y);
+        if(x<y) swap(x, y);
+        int dis1 = sum[x]-a[x]-sum[y]+a[y];
+        int dis2 = tot-dis1;
+        printf("%d\n", min(dis1, dis2));
+    }
+}
+```
+
+
+
+### 1047 Student List for Course 
+
+题意：给出n个学生的选课列表，输出每门课有哪些学生选
+
+思路：送分题，但是直接`cout`就超时，此时需要改变一下思路，与其`cout`一个`string`，不如`puts()`一个`string.c_str()`，毕竟C系最快
+
+```c++
+vector<string> course[2555];
+int n, k ,m, x;
+string name; 
+int main(){
+    ios::sync_with_stdio(false);cin.tie(0);
+    cin>>n>>k;
+    for(int i=0;i<n;i++){
+        cin>>name>>m;
+        for(int j=0;j<m;j++){
+            cin>>x;
+            course[x].push_back(name);
+        }
+    }
+    for(int i=1;i<=k;i++){
+        printf("%d %d\n", i, course[i].size());
+        sort(course[i].begin(), course[i].end());
+        for(auto x: course[i]) puts(x.c_str());
+    }
+}
+```
+
+
+
+### 1048 Find Coins 
+
+题意：给定一个数组，能否从中找到两个数字使它们的和为给定数字
+
+思路：暴力超时，二分真香，注意**退出二分循环的时候还要再判一次**
+
+```c++
+int n, m, a[MAXN];
+int main(){
+    scanf("%d%d",&n,&m);
+    for(int i=0;i<n;i++) scanf("%d",a+i);
+    sort(a, a+n);
+    for(int i=0;i<n;i++){
+        int need = m-a[i], lo=i+1, hi = n-1, mid=(lo+hi)/2;
+        while(lo < hi){
+            if(a[mid] == need){
+                cout<<a[i]<<" "<<a[mid]<<endl;
+                return 0;
+            }
+            else if(a[mid] > need)
+                hi = mid-1;
+            else if(a[mid] < need)
+                lo = mid+1;
+            mid = lo + (hi-lo)/2;
+        }
+        if(a[mid] == need){
+            cout<<a[i]<<" "<<a[mid]<<endl;
+            return 0;
+        }
+    }
+    cout<<"No Solution"<<endl;
+}
+```
+
+
+
+### [TODO] 1049 Counting Ones
+
+题意：给定一个数字n，判断从1数到n的过程中出现了多少个1
+
+
+
+## 第十四套
+
+### 1050 String Subtraction
+
+题意：从s1中删掉在s2中出现过的字母
+
+```c++
+string s1, s2;
+int main(){
+    getline(cin, s1);
+    getline(cin, s2);
+    set<char> s;
+    for(auto x: s2) s.insert(x);
+    for(auto x: s1)
+        if( s.find(x) == s.end()) cout<<x;
+    cout<<endl;
+}
+```
+
+
+
+### 1051 Pop Sequence
+
+题意：给定栈的最大容量，一个长度为n的序列，判断这个序列是否可能是栈pop出来的
+
+思路：栈模拟，注意判断出栈元素与应出元素不等的情况。
+
+```c++
+int m, n, k, x;
+int main(){
+    cin>>m>>n>>k;
+    while(k--){
+        vector<int> num;
+        for(int i=0;i<n;i++){
+            cin>>x;
+            num.push_back(x);
+        }
+        int idx = 1;
+        stack<int> st;
+        bool f = true;
+        for(int i=0;i<n;i++){
+            while (idx <= n && (st.empty() || st.top() < num[i]))
+                st.push(idx++);
+            if(st.size() > m) f = false;
+            if(!st.empty() && st.top() == num[i])
+                st.pop();
+            else
+                f = false;
+        }
+        printf(f?"YES\n":"NO\n");
+    }
+}
+```
+
+
+
+
+
+### 1052 Linked List Sorting
+
+题意：给一个链表和头节点，按key排序后输出。
+
+思路：有无用节点，要遍历一遍再排序。注意，**答案是空时，输出`0 -1`**
+
+```c++
+struct node{
+    int addr, data, nxt;
+    bool operator<(const node& a)const{return data<a.data;}
+}a[MAXN];
+unordered_map<int, int> mp;
+int n, x, head, addr, data, nxt;
+int main(){
+    scanf("%d%d", &n, &head);
+    for(int i=0;i<n;i++){
+        scanf("%d%d%d", &a[i].addr, &a[i].data, &a[i].nxt);
+        mp[a[i].addr] = i;
+    }
+    vector<node> ans;
+    while(head != -1){
+        ans.push_back(a[mp[head]]);
+        head = a[mp[head]].nxt;
+    }
+    sort(ans.begin(), ans.end());
+    if(ans.size()==0){cout<<"0 -1"<<endl; return 0;}
+    printf("%lu %05d\n", ans.size(), ans[0].addr);
+    for(int i=0;i<ans.size();i++){
+        printf("%05d %d ", ans[i].addr, ans[i].data);
+        if(i!=ans.size()-1) printf("%05d\n", ans[i+1].addr);
+        else printf("-1\n");
+    }
+}
+```
+
+
+
+### 1053 Path of Equal Weight
+
+题意：给一颗树，每个节点上有权重，求出从根节点到叶节点的权重和等于m的所有路径
+
+思路：普通回溯，注意输出的是权重路径，不是节点编号路径
+
+```c++
+int n,m,all,w[MAXN], fa, cnt, son;
+vector<int> G[MAXN];
+vector<vector<int>> ans;
+void dfs(vector<int>& path, int rt, int sum){
+    int sumpath = sum + w[rt];
+    path.push_back(w[rt]);
+    if(G[rt].empty() && sumpath == all){
+        vector<int> tmp = path;
+        ans.push_back(tmp);
+    }
+    else{
+        for(auto s: G[rt])
+            dfs(path, s, sumpath);
+    }
+    path.pop_back();
+}
+int main(){
+    scanf("%d%d%d",&n, &m, &all);
+    for(int i=0;i<n;i++) scanf("%d", w+i);
+    for(int i=0;i<m;i++){
+        scanf("%d%d", &fa, &cnt);
+        for(int j=0;j<cnt;j++){
+            scanf("%d", &son);
+            G[fa].push_back(son);
+        }
+    }
+    vector<int> path;
+    dfs(path, 0, 0);
+    sort(ans.begin(), ans.end());
+    reverse(ans.begin(), ans.end());
+    for(auto x: ans){
+        for(int i=0;i<x.size();i++){
+            if(i==0) cout<<x[i];
+            else cout<<" "<<x[i];
+        }
+        cout<<endl;
+    }
+}
+```
+
+
+
+## 第十五套
+
+### 1054 The Dominant Color
+
+题意：给n*m个数字，输出出现最多的一个数字
+
+```c++
+int n, m, x;
+map<int, int> mp;
+int main(){
+    scanf("%d%d", &n, &m);
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d", &x);
+            mp[x]++;
+        }
+    }
+    for(auto it=mp.begin(); it!=mp.end(); it++){
+        if(it->second > n*m/2){
+            printf("%d\n",it->first);
+            return 0;
+        }
+    }
+}
+```
+
+
+
+### 1055 The World's Richest
+
+题意：给n个人的名字，年龄，资产。进行q此查询，每次查询年龄在`[min, max]`间的资产最高的`top`个人。
+
+思路：普通排序题，但是输入太多，不能用`cin`和`string`，老实用`scanf`和`char[]`。注意**比较函数** 的用法。`strcmp(s1, s2)`返回小于0表示`s1 < s2`。另外输入的时候一定要加括号，不然报错，`scanf("%s",(a[i].name));`
+
+```c++
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <cmath>
+#include <vector>
+#include <string.h>
+#include <stack>
+#include <queue>
+#include <unordered_map>
+#include <string>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pii;
+const long long MAXN = 101000;
+const int INF = 0x3f3f3f3f;
+using namespace std;
+
+struct node{
+    char name[20];
+    int net, age;
+    node(){}
+    node(int a){net=0; age=a;}
+} a[MAXN];
+bool cmpnet(node a, node b){
+    if(a.net == b.net && a.age != b.age)
+        return a.age < b.age;
+    else if(a.net == b.net && a.age == b.age)
+        return strcmp(a.name, b.name) < 0;
+    else
+        return a.net > b.net;
+}
+int n,q,minage,maxage,top, cnt=1;
+int main(){
+    scanf("%d%d", &n, &q);
+    for(int i=0;i<n;i++)
+        scanf("%s%d%d", (a[i].name), &a[i].age, &a[i].net);
+    
+    sort(a, a+n, cmpnet);
+    while(cnt<=q){
+        scanf("%d%d%d",&top, &minage, &maxage);
+        printf("Case #%d:\n", cnt++);
+        int k = 0;
+        for(int i=0;i<n && k<top;i++){
+            if (a[i].age >= minage && a[i].age<=maxage){
+                printf("%s %d %d\n", a[i].name, a[i].age, a[i].net);
+                k++;
+            }
+        }
+        if(k == 0) printf("None\n");
+    }
+}
+```
+
+
+
+### 1056 Mice and Rice
+
+题意：给n个参赛者，n个值，每g个组成一个group，若剩下不满g的话也组成一个group。按照某个order先后排队后组队，每队中值最大者胜出，这轮中没胜出者排名相同，直到第一名产生，输出参赛者名次
+
+思路：恶心的模拟题。**最恶心的是名次的处理**
+
+```c++
+int n, g, x;
+vector<int> a(MAXN, 0), o(MAXN, 0), ans(MAXN, 0);
+map<int, int> mp;
+int main(){
+    cin>>n>>g;
+    for(int i=0;i<n;i++) cin>>a[i];
+    for(int i=0;i<n;i++) {
+        cin>>o[i];
+        mp[i] = o[i];
+    }
+    while(!mp.empty()){
+        int cnt = 0;
+        vector<pii> group[MAXN];
+        for(auto it=mp.begin();it!=mp.end(); it++) {
+            int idx = it->second, val = a[idx];
+            group[cnt/g].push_back({val, idx});
+            cnt++;
+        }
+        for(int i=0;i<=cnt/g;i++) 
+            sort(group[i].begin(), group[i].end(), greater<pii>());
+        for(int i=0;i<=cnt/g;i++)
+            for(int j=1;j<group[i].size();j++) 
+                    ans[group[i][j].second] = (cnt+g-1)/g+1;
+        for(auto it=mp.begin();it!=mp.end();)
+            if(ans[it->second] == (cnt+g-1)/g+1)
+                mp.erase(it++); 
+            else
+                it++;
+        if(mp.size() == 1){
+            ans[((mp.begin())->second)] = 1;
+            mp.clear();
+        }
+    }
+    for(int i=0;i<n;i++) 
+        if(i == 0) cout<<ans[i];
+        else cout<<" "<<ans[i];
+}
+```
+
+
+
+
+
+### 1057 Stack \****
+
+题意：实现一个栈的功能，支持`push`，`pop`，和`peekmedian`操作，最多会有$10^5$个操作，`peekmedian`是返回栈中元素的中位数。
+
+思路：一道比较困难的数据结构题目，因为查找中位数的复杂度要求是$O(logn)$，$O(n)$是过不了的。同时根据一篇博客[web][https://blog.csdn.net/sinat_29278271/article/details/47291659] ，有大致以下几种方法
+
+1. 树状数组+二分查找，线段树`40ms`。
+
+   线段树好写一点，线段树每个节点保存当前的和，实现一个查找线段树中第k大元素的功能即可。树状数组每个节点保存对应线段和，二分查找出第k大在哪即可。
+
+   ```c++
+   inline int find_kth(int k, int root = 1) {
+               while(root < sz) {              //root的儿子还合法（选一个儿子去走）
+                   if(rt[root<<1] >= k)        //第k大包含在当前节点的左儿子中，往左走
+                       root <<= 1;
+                   else {                      //第k大在右儿子中，往右走，同时k减去左儿子的和
+                       k -= rt[root<<1];
+                       root = (root<<1)|1;
+                   }
+               }
+               return root - sz;
+   }
+   ```
+
+   * 学会zkw线段树，事半功倍。
+
+2. 优先队列+MultiSet （红黑树），Treap平衡搜索树。
+
+   我开始的解题思路是，把所有元素放入一个`map`，然后返回`map.begin() + (map.size()+1 )/2`，因为`map`也是红黑树，但由于这种非关联容器使得迭代器不能直接加减，上述办法无效。所以当有一颗平衡树的时候，可以直接根据子树大小去寻找对应中位数。由于Treap平衡树太难实现就算了。
+
+
+
+## 来不及了只能找30分的题做
+
+---
+
+
+
+### 1064 Complete Binary Search Tree **
+
+题意：给n个数字，输出它们对应的满二叉排序树的层序遍历
+
+思路：将数字排序，利用**二叉树中序遍历从小到大**的性质，和**节点x**的左儿子节点为2x，右儿子是2x+1。建树后输出。
+
+```c++
+int n, x, idx = 0, tree[MAXN], a[MAXN];
+void build(int rt){
+    if(rt > n) return ;
+    build(rt*2);
+    tree[rt] = a[idx++];
+    build(rt*2+1);
+}
+int main(){
+    scanf("%d\n", &n);
+    for(int i=0;i<n;i++)
+        scanf("%d", a+i);
+    sort(a, a+n);
+    build(1);
+    for(int i=1;i<=n;i++)
+        printf(i==1?"%d":" %d", tree[i]);
+}
+```
+
+
+
+
+
+### 1068 Find More Coins ***
+
+题意：给n个面值的硬币$n<10^4$，能否凑齐m块钱$m\le100$，如果能，输出序列最小的面值组合。
+
+思路：
+
+* 开始用dfs搜索+回溯做，只能拿到24分。1个点错误，1个点超时，因为复杂度是$O(n^2)$
+* 正确姿势是动态规划：
+  * $dp_{i,j} = $ 前i个硬币能达到面值不超过j的最大值 $dp_{i,j} = max(dp_{i-1,j}, \ dp_{i-1,j-v[i]}+v[i])$
+  * 若 $dp_{n,m} = m$，说明找到了答案，现在问题变成了找序列最小
+* 注意dp计算的过程中，若加入$v[i]$，则选择了第i个硬币。若$v$最小到达排序，得到的是最大序列。
+* 若把$v$从大到小排序，越往后加，面值越小。而表中只能体现出来最后加的是哪些面值。
+* 尤其要注意是如何找最小序列的
+
+```c++
+int n, m, a[MAXN], dp[10010][101] = {0};
+bool choose[10010][101] = {false};
+vector<int> ans;
+int main(){
+    scanf("%d%d", &n, &m);
+    for(int i=1;i<=n;i++) scanf("%d", a+i);
+    sort(a+1, a+1+n, greater<int>());
+    for(int i=1;i<=n;i++){
+        for(int j=1; j<=m;j++)
+            if(j-a[i]>=0 && dp[i-1][j-a[i]] + a[i] <= m && dp[i-1][j-a[i]] + a[i] >= dp[i-1][j]) {
+                dp[i][j] = dp[i-1][j-a[i]] + a[i];
+                choose[i][j] = true;
+            }
+            else
+                dp[i][j] = dp[i-1][j];
+    }
+    if(dp[n][m] != m)
+        printf("No Solution\n");
+    else{
+        int idx=n, val=m;
+        while(val > 0){
+            if(choose[idx][val]){
+                ans.pb(a[idx]);
+                val -= a[idx];
+            }
+            idx--;
+        }
+        for(int i=0;i<ans.size();i++)
+            printf(i==0?"%d":" %d", ans[i]);
+    }
+}
+```
+
+
+
+### 1072 Gas Station **
+
+题意：n个城市，k条边，m个加油站选址点，在哪个加油站建站满足要求：1.能到达所有城市，且最大距离小于等于$range$ 2.满足1若有多个，选择最短距离最长的那一个 3.若满足2有多个，选择平均距离最小的
+
+思路：跑m次最短路即可，坑点比较多
+
+* 跑最短路的时候，要把加油站选址点算到图中去
+
+* 四舍五入不用管
+
+* Dijkstra的堆优化在g++下第五个点超时，在clang++下第五个点超内存，原因不详(STL太慢？)，写法如下：
+
+  ```c++
+  while(!Q.empty()){
+      pii t = Q.top(); Q.pop();
+      int city = t.second, dis = t.first;
+      if(d[city] != dis) continue;
+      vis[city] = true;
+      for(auto son: G[city]) {
+          d[son.first] = min(d[son.first], dis + son.second);
+          if(!vis[son.first])
+              Q.push({d[son.first], son.first});
+      }
+  } 
+  ```
+
+* 改成暴力最短路就过了
+
+```c++
+int n=0, m=0, k, len, range, u, v, pos=-1, d[MAXN];
+bool vis[MAXN] = {false};
+char s1[8], s2[8];
+vector<pii> G[MAXN];
+inline pair<pii, bool> diljkstra(int s) {
+    int sumd=0, mind = INF;
+    memset(d, INF, sizeof(d));
+    memset(vis, false, sizeof(vis));
+    d[s] = 0;
+    while(1) {
+        int tmp = INF, node = -1;
+        for(int i=1;i<=m+n;i++)
+            if(!vis[i] && d[i]<tmp) {tmp = d[i]; node = i;}
+        if(node == -1) break;
+        vis[node] = true;
+        for(auto son: G[node]) 
+            d[son.first] = min(d[son.first], d[node]+son.second);
+    }
+    for(int i=1;i<=n;i++){
+        if(d[i] == INF || d[i] > range)
+            return {{0,0}, false};
+        mind = min(mind, d[i]);
+        sumd += d[i];
+    }   
+    return {{mind, sumd}, true};
+}
+int main(){
+    scanf("%d%d%d%d", &n, &m, &k, &range);
+    for(int i=1;i<=k;i++){
+        scanf("%s %s %d", s1, s2, &len);
+        if(s1[0] == 'G' && strlen(s1) < 3) u = s1[1]-'0' + n;
+        if(s1[0] == 'G' && s1[2] == '0')  u = 10 + n;
+        if(s1[0] != 'G') u = atoi(s1);
+        if(s2[0] == 'G' && strlen(s2) < 3) v = s2[1]-'0' + n;
+        if(s2[0] == 'G' && s2[2] == '0')  v = 10 + n;
+        if(s2[0] != 'G') v = atoi(s2);
+        G[u].push_back({v,len});
+        G[v].push_back({u,len});
+    }
+    pii ans = make_pair(-1, -1);
+    for(int i=1; i<=m; i++) {
+        pair<pii, bool> ret = diljkstra(i+n);
+        if(ret.second == false) continue;
+        if(ret.first.first > ans.first){
+            ans = ret.first;
+            pos = i;
+        }
+        else if(ret.first.first == ans.first && ret.first.second < ans.second){
+            ans = ret.first;
+            pos = i;
+        }
+    }  
+    if(ans.first == -1 && ans.second == -1)
+        printf("No Solution\n");
+    else
+        printf("G%d\n%.1f %.1f\n", pos,(double)ans.first, (double)ans.second/n);
+}
+```
+
+
+
+经过测试
+
+```
+#node=10, #edge=100
+Dijkstra using Heap: 0.040650
+Dijkstra using brute force: 0.000069
+
+#node=20, #edge=200
+Dijkstra using Heap: 0.391914
+Dijkstra using brute force: 0.000122
+
+#node=30, #edge=300
+Dijkstra using Heap: 5.187188
+Dijkstra using brute force: 0.000203
+```
+
+说明是堆优化写挂了, 挂在哪里呢？
+
+```c++
+while(!Q.empty()){
+    ...
+    if(d[city] != dis) continue;
+    vis[city] = true;
+    for(auto son: G[city])
+    	...
+} 
+    |||||||
+    |||||||
+    |||||||
+  |||||||||||
+   |||||||||
+    |||||||
+     |||||
+      |||
+       |
+while(!Q.empty()){
+    ...
+    if(vis[city] || d[city] != dis) continue;
+    vis[city] = true;
+    for(auto son: G[city])
+    	...
+} 
+```
+
+* 最终，堆优化版本耗时23ms，暴力版本耗时47ms
+
+
+
+### 1076 Forwards on Weibo *
+
+题意：给出n个用户和他们之间的微博follow关系，询问k次，每次询问对用户i，若他发微博，则它的L层粉丝中都会转发，求转发次数。
+
+思路：开始用dfs做，有2个点过不了。其实主要问题是dfs访问到的点不一定是最短距离，而bfs才是，改用bfs过掉。使用bfs处理层数的时候，可以加带一个层数标记。
+
+```c++
+int n, L,u, k, m, ans=0;
+vector<int> G[MAXN];
+bool vis[MAXN] = {false};
+void bfs(int u) {
+    queue<pii> Q;
+    Q.push({u, 0});
+    while(!Q.empty()) {
+        pii top = Q.front(); Q.pop();
+        if(vis[top.first] || top.second > L) continue;
+        vis[top.first] = true;
+        ans++;
+        for(auto nxt: G[top.first])
+            Q.push({nxt, top.second+1});      
+    }
+}
+int main(){
+    scanf("%d%d", &n, &L);
+    for(int i=1;i<=n;i++){
+        scanf("%d", &m);
+        for(int j=0;j<m;j++){
+            scanf("%d", &u);
+            G[u].pb(i);
+        }
+    }
+    scanf("%d", &k);
+    while(k--){
+        scanf("%d", &u);
+        for(int i=1;i<=n;i++) vis[i] = false;
+        ans = 0;
+        bfs(u);
+        printf("%d\n", ans-1);
+    }
 }
 ```
 

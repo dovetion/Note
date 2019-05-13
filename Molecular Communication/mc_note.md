@@ -396,3 +396,68 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 # Design and wet-laboratory implementation of reliable end-to-end molecular communication
 
+## 第一章 介绍
+
+* 这个湿实验的主要特征是，中间节点具有复制包(packet)的能力，中间节点一旦检测到packet就复制这个packet，接收节点收到packet后产生一个ack packet回复。
+
+
+
+## 第二章 通信系统设计
+
+![image](./imgs/11.png)
+
+* 包括source, intermediate, destination三个节点。source产生包和传输，中间节点产生包的复制，终点产生收到包后产生ACK回传给源。
+* Molecular packet的Header里包含控制信息，如源地址，目的地址，错误代码(Hamming code)，序列号。如果Data部分为空则是一个ACK。
+* packet信息都编码在DNA或RNA序列中（本论文使用RNA和人造细胞）
+
+
+
+
+
+## 第三章 湿实验实现
+
+![image](./imgs/12.png)
+
+* 每一个nanomachie都是A图中的一个小水滴，由water-in-oil emulsion （油包水乳液）组成。它是一种微米级别的水滴在油中的分布，每一个小水滴都被单层的油状的表面活性剂分隔开。
+
+* 每一个nanomachine都是通过一个叫“PURE” 的系统实现的。
+
+  > Ichihashi, N., Usui, K., Kazuta, Y., Sunami, T., Matsuura, T., &
+  > Yomo, T. (2013). Darwinian evolution in a translation-coupled
+  > RNA replication system within a cell-like compartment. Nature
+  > Communications, 4, 2494.
+  >
+  > Shimizu, Y., Inoue, A., Tomari, Y., Suzuki, T., Yokogawa, T., Nishikawa, K., et al. (2001). Cell-free translation reconstituted with purified components. Nature Biotechnology, 19, 751–755. 
+
+* INFO-RNA是一个RNA序列，用来编码RNA复制酶，通过互补链合成复制INFO-RNA，小水滴中包含了蛋白质翻译的必须元件（核糖体，氨基酸）。INFO-RNA通过复制酶的翻译，递归复制。
+
+* ACK-RNA可以有INFO-RNA编码的复制酶复制，但它本身不编码复制酶。当INFO-RNA和ACK-RNA共存于纳米机时，预期优先翻译ACK-RNA，因为它长度更短，复制更快。
+
+  >知识补充：
+  >
+  >RNA，核糖核酸，线性大分子，由A, G, C , U四种碱基组成。
+
+* 图B中是中间节点的生化反应过程，但此文章在实验最开始，中间节点和目的都包含了INFO-RNA，没有设计RNA交换的过程。
+
+* 使用10$\mu l$ PURE系统的RNAs滴在1ml的油与表面活性剂中，冷冻状态下16000rpm离心一分钟
+
+* 在37度下孵化活性剂4小时，每隔一小时挑选小部分冷冻储藏。
+
+* 解冻每部分的储藏活性剂，测量INFO-RNA的浓度。
+
+* 对于ACK-RNA，滴10 $\mu l$的 PURE液滴，同时包含INFO-RNA和ACK-RNA，其余步骤相同。
+
+* 经4小时的复制，中间节点的INFO-RNA浓度方大7倍，终点的ACK-RNA放大1900倍。INFO-RNA的长度是ACK-RNA的10倍以上。
+
+
+
+## 第四章 性能分析
+
+* 通过设置不同的中间节点数量和环境尺寸，去计算传输时延（蒙特卡洛模拟）。
+
+![iamge](./imgs/13.png)
+
+* 随着中间节点的增加，传输时延不断降低。
+* one-way和round-trip的通信成功率没有显著区别。
+* 随着通信环境尺寸的增大，如果中间节点数量不足，通信成功率显著降低，round-trip比one-way更低。
+

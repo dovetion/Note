@@ -461,3 +461,112 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 * one-way和round-trip的通信成功率没有显著区别。
 * 随着通信环境尺寸的增大，如果中间节点数量不足，通信成功率显著降低，round-trip比one-way更低。
 
+
+
+
+
+# Anti-ISI Demodulation Scheme and Its Experiment-Based Evaluation for Diffusion-Based Molecular Communication
+
+## 第一章 介绍
+
+* 提出了一种增量检测算法(IDA)，能够改善基于浓度梯度的分子通信的ISI。并且通过物理实验平台进行实验，验证了新算法对BER和SNR的影响。
+
+
+
+## 第四章 增量检测算法
+
+* 在一个时隙内，如果检测浓度有“显著增加”，判断此时隙symbol是'1'，否则是'0'。
+* 每个时隙开始前一小段时间$\tau$测量两次，计算浓度差值。
+* $\tau$的选取：通过求$C(t)$的极值$C_{max}$，得到$\tau$与极值出现的位置的关系。保证两次测量时的差异最大化。
+* 如果检测值小于$\frac{C_[max]}{2}$，直接判0，否则根据差值的变化去判，具体如图。
+
+![image](./imgs/14.png)
+
+![image](./imgs/15.png)
+
+
+
+
+
+## 第五章 实验设计与结果
+
+* 一个疑问，一个时隙采样10次，判断门限是8，根据Fig.2.，这样的数据会被判成0（不到8），但是却发的1？
+
+![image](./imgs/16.png)
+
+![image](./imgs/17.png)
+
+
+
+* 在同距离，时隙长度，不同算法之间进行比较BER。
+* 假设了tx, rx完美同步，如果不完美同步怎么办？
+* 其实本质上就是斯坦福那篇论文提到的"斜率"检测，比起固定门限检测当然更好，但和SVM， RNN比呢？
+
+
+
+
+
+# Epidemic Information Dissemination in Mobile Molecular Communication Systems
+
+## 第一章 介绍
+
+* 在稀疏的移动分子通信网络中，通过**传染病传播**手段传播信息。
+* 对这个传染模型建立了基于趋化的的数学模型，并仿真验证。
+
+
+
+## 第二章 系统模型
+
+* 纳米机是移动的
+* 纳米机存在两种状态：已感染和未感染。
+* 已感染的纳米机在一些特定条件下会转换成未感染状态。
+
+![image](./imgs/18.png)
+
+
+
+##  第三章  数学模型
+
+* 环境 $\mathcal {A} = \{(x,y) | 0\le x \le L, 0 \le y \le L\}$
+
+![image](./imgs/19.png)
+
+* 纳米机既不自我复制，也不消失，即总数一直恒定。
+* $t=0$时环境中没有信息分子
+* 环境中不包含流，因此不会存在影响纳米机空间分布的流。
+
+
+
+### A. 纳米机移动模型
+
+* 每个纳米机被建模成点模型。
+
+* 时间$t$被分割成时隙，每一个时隙长度是$\Delta t$
+
+* 纳米机$i$在每一个时隙开始时，按如下公式更新位置，$v$是移动速度，$\theta_i(t)$是$t$时刻移动方向
+
+  $x_i(t +\Delta t) = x_i(t)+v \Delta t cos(\theta_i(t))$
+
+  $y_i(t +\Delta t) = y_i(t)+v \Delta t sin(\theta_i(t))$
+
+* 纳米机也在不断地改变自己的移动方向，随机变量$\Delta \theta$以同等概率在$+ \phi$和$-\phi$取得
+
+  $\theta_i(t+\Delta t) =\theta_i(t) + \Delta \theta$
+
+  所以$\theta_i(t)$的均值和方差是 $\theta_i(0)$和$2D_{rot}t$，$D_{rot}$是一个旋转常数，$D_{rot}=\frac{2\Delta t}{\phi ^2}$
+
+* 小的$D_{rot}$使纳米机倾向于在直线上运动，大的$D_{rot}$使方向更加随机，在原地附近运动的概率更大。
+
+![image](./imgs/20.png)
+
+
+
+### B. 纳米机状态变化
+
+* 一个纳米机存在 $[R]$个接收器
+
+* 在时间$t$，纳米机通过$[LR]_i(t)$决定自身的状态
+
+* $[LR]_i(t)$的变化率：$\frac{d[LR]_i(t)}{dt} = k^+c(x_i(t),y_i(t), t)([R]-[LR]_i(t)) - k^-[LR]_i(t)$
+
+  观察式子可以发现，

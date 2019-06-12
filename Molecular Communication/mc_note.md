@@ -1,4 +1,4 @@
-# 论文阅读笔记
+#  论文阅读笔记
 
 [TOC]
 
@@ -553,7 +553,7 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
   $\theta_i(t+\Delta t) =\theta_i(t) + \Delta \theta$
 
-  所以$\theta_i(t)$的均值和方差是 $\theta_i(0)$和$2D_{rot}t$，$D_{rot}$是一个旋转常数，$D_{rot}=\frac{2\Delta t}{\phi ^2}$
+  所以$\theta_i(t)$的均值和方差是 $\theta_i(0)$和$2D_{rot}t$，$D_{rot}$是一个旋转常数，$D_{rot}=\frac{2\Delta t}{\phi ^2}$（并不知道是怎么算的）
 
 * 小的$D_{rot}$使纳米机倾向于在直线上运动，大的$D_{rot}$使方向更加随机，在原地附近运动的概率更大。
 
@@ -563,10 +563,99 @@ $$\hat{b}[i] = \begin{cases}0, \quad n_{RX}<\xi \\ 1,\quad n_{RX}\ge\xi\end{case
 
 ### B. 纳米机状态变化
 
-* 一个纳米机存在 $[R]$个接收器
+- 一个纳米机存在 $[R]$个接收器
+- 在时间$t$，纳米机通过$[LR]_i(t)$决定自身的状态
+- $[LR]_i(t)$的变化率：$\frac{d[LR]_i(t)}{dt} = k^+c(x_i(t),y_i(t), t)([R]-[LR]_i(t)) - k^-[LR]_i(t)$
+- 通俗的讲：受体结合变化率 = 吸收常数 * 浓度 * 剩余受体数量 - 释放常数 * 结合受体数量
+- 通过"Hill function"，定义纳米机$i$在$t$时刻的感染概率$P_i(t)$  
+- $P_i(t) = \frac{(\frac{[LR]_i(t)}{[R]})^n}{(\frac{[LR]_i(t)}{[R]})^n+K^n}$
+- 给定阈值$K$，简化模型。$$\begin{equation}
+  P_i(t)=\left\{
+  \begin{aligned}
+  0 &  & (\frac{[LR]_i(t)}{[R]}\ < K) \\
+  1 &  & (\frac{[LR]_i(t)}{[R]}\ \ge K) \\
+  \end{aligned}
+  \right.
+  \end{equation}$$
 
-* 在时间$t$，纳米机通过$[LR]_i(t)$决定自身的状态
+### C. 分子繁殖
 
-* $[LR]_i(t)$的变化率：$\frac{d[LR]_i(t)}{dt} = k^+c(x_i(t),y_i(t), t)([R]-[LR]_i(t)) - k^-[LR]_i(t)$
+* 被感染的纳米机以固定速率$M$释放分子
 
-  观察式子可以发现，
+* 分子随着扩散系数$D$扩散，随着降解系数$k_d$降解，因此分子浓度如下图给出
+
+  ![image](./imgs/21.png)
+
+
+
+## 第四章 实验与仿真
+
+* 所有仿真实验都是在$t=0$把1个被感染的纳米机放在中心开始，其余纳米机随机选择位置
+* 观察纳米机感染率$z(t)$，
+* 观察了纳米机数量与感染率的关系，纳米机移动速度和感染率的关系，$D_{rot}$对感染率的关系
+
+![image](./imgs/22.png)
+
+![image](./imgs/23.png)
+
+
+
+结论如下：
+
+* Latent随纳米机数量先变小再变大：增加纳米机会增加活动范围，到一定值后，增多的纳米机数量会要求更高的信息分子浓度。
+* Latent随纳米机速度先变小再变大，变小的原因很好理解，纳米机的活动范围增大了，变大的原因在于，纳米机释放分子的速率是固定的，速度越快，浓度就越小，被感染的概率越低。
+* 当 $D_{rot}$约大，活动区域越小，否则活动区域越大。因此感染得更快，否则更慢。
+* $[R]$的数量越多，latent越大，因为需要的受体分子越多。
+* $D$更大，分子活动区域更大，但浓度更低。
+
+![image](./imgs/24.png)
+
+
+
+
+
+# PURE 系统
+
+## 参考资料
+
+[1]. Darwinian evolution in a translation-coupled RNA replication system within a cell-like compartment
+
+[2]. https://international.neb.com/products/protein-expression-and-purification-technologies/cell-free-expression/cell-free-expression/advantages-of-the-pure-system
+
+[3]. https://link.springer.com/protocol/10.1007%2F978-1-62703-782-2_19
+
+[4]. A simple, robust, and low-cost method to produce the PURE cell - free system.
+
+
+
+## [4].中的一些介绍
+
+* 2001年，Shimizu等人。 发明了一种称为“PURE”的cell-free系统无，使用重组元件的蛋白质合成
+
+  >1. [7]  Shimizu, Y. et al. Cell-free translation reconstituted with purified components. Nature Biotechnology 19, 751–755 (2001). 
+
+* PURE系统可以用来做遗传网络工程，重组DNA，分子诊断，治疗和教育。
+
+  >1. [8]  van Nies, P. et al. Self-replication of DNA by its encoded proteins in liposome-based synthetic cells. Nature communications 1–12 (2018). 
+  >2. [9]  Pardee, K. et al. Rapid, Low-Cost Detection of Zika Virus Using Programmable Biomolecular Components. Cell 165, 1255–1266 (2016). 
+  >3. [10]  Pardee, K. et al. Portable, On-Demand Biomolecular Manufacturing. Cell 167, 248–254.e12 (2016). 
+  >4. [11]  Huang, A. et al. BiobitsTM explorer: A modular synthetic biology education kit. Science Advances 4, eaat5105 (2018). 
+
+* PURE系统被认为是人造细胞的可靠起点
+
+  >1. [12]  Forster, A. C. & Church, G. M. Towards synthesis of a minimal cell. Molecular systems biology 2, 45 (2006). 
+  >2. [13]  Schwille, P. et al. MaxSynBio - Avenues towards creating cells from the bottom up. Ange- wandte Chemie-International Edition (2018). 
+
+* 商业上PURExpress, New England Biolabs (NEB)提供PURE服务，但是很贵，1.36USD/ul。最近证明，PURE系统可以使用合成微生物“consortia”（TraMOS PURE）搭建（2017年）
+
+  >1. [17]  Villarreal, F. et al. Synthetic microbial consortia enable rapid assembly of pure translation machinery. Nature Chemical Biology 14, 29–35 (2017). 
+
+* 参考材料[4]提出了一种鲁棒的，低成本的PURE系统，采用了“OnePot”方法，成本降到0.09USD/ul
+
+* PURE系统主要分为三个部分
+
+  * 蛋白质（转录，翻译和能量再生）
+  * 核糖体
+  * 小分子组分（盐，缓冲液，NTP，肌酸磷酸和亚叶酸）
+
+* 使用这个系统制造人造蛋白需要4天，20小时动手实验，3张实验台。
